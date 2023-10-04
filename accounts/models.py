@@ -47,17 +47,22 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     def get_by_natural_key(self):
         return self.email
+
+
     
 
-class College(BaseUser):
+class CollegeSpoc(BaseUser): #college spoc while registering their college
     name = models.CharField(max_length=255)
     address = models.TextField()
     is_verified = models.BooleanField(default=False)
     affiliated_univ = models.CharField(max_length=255)
     univ_address = models.TextField()
-    mail = models.EmailField()
+    spoc_mail = models.EmailField()
     contact = models.CharField(max_length=20)
+    profile_pic = models.ImageField(upload_to='profile_pics/')
+    aishe_code = models.CharField(max_length=20)
     abbrevation = models.CharField(max_length=10,null=True,blank=True)
+    letter_of_approval = models.FileField(upload_to='letters_of_approval/')
     
 
     def __str__(self):
@@ -67,8 +72,8 @@ class College(BaseUser):
     
 class CourseCoordinator(BaseUser):
     name = models.CharField(max_length=255)
-    affiliated_college = models.ForeignKey(College, on_delete=models.CASCADE)
-    contact = models.CharField(max_length=20)
+    affiliated_college = models.ForeignKey(CollegeSpoc, on_delete=models.CASCADE)
+    contact = models.CharField(max_length=20) #tentative
     designation = models.CharField(max_length=255)
     
 
@@ -76,7 +81,7 @@ class CourseCoordinator(BaseUser):
         return self.name
 
 class College_Course(models.Model):
-    college = models.ForeignKey(College, on_delete=models.CASCADE)
+    college = models.ForeignKey(CollegeSpoc, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -93,3 +98,9 @@ class Coordinator_Course(models.Model):
 
     
 
+class Visitor(BaseUser):
+    name = models.CharField(max_length=255)
+    profile_pic = models.ImageField(upload_to='profile_pics/')
+    def __str__(self):
+        return self.name
+   

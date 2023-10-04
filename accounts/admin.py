@@ -1,5 +1,5 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import BaseUser, College, Course, CourseCoordinator
-admin.site.register([BaseUser, College, Course, CourseCoordinator])
+from .models import BaseUser, CollegeSpoc, Course, CourseCoordinator,Visitor
+admin.site.register([BaseUser, CollegeSpoc, Course, CourseCoordinator,Visitor])
