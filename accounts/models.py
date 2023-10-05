@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 type_choices = (
     ('admin', 'Admin'),
-    ('college', 'College'), 
+    ('collegespoc', 'CollegeSpoc'), 
     ('college_coordinator', 'College_Coordinator'),
 )
 class Course(models.Model):
@@ -32,7 +32,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self.create_user(email, password, **extra_fields)
-
+# register -base user +auth0 db store 
+# login-auth0
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     type = models.CharField(max_length=20, choices=type_choices)
@@ -59,7 +60,7 @@ class CollegeSpoc(BaseUser): #college spoc while registering their college
     univ_address = models.TextField()
     spoc_mail = models.EmailField()
     contact = models.CharField(max_length=20)
-    profile_pic = models.ImageField(upload_to='profile_pics/')
+    profile_pic = models.ImageField(upload_to='profile_pics/',blank=True)
     aishe_code = models.CharField(max_length=20)
     abbrevation = models.CharField(max_length=10,null=True,blank=True)
     letter_of_approval = models.FileField(upload_to='letters_of_approval/')
@@ -67,6 +68,7 @@ class CollegeSpoc(BaseUser): #college spoc while registering their college
 
     def __str__(self):
         if(self.abbrevation):
+            
             return self.abbrevation
         return self.name
     
