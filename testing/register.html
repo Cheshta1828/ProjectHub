@@ -6,15 +6,24 @@
     <title>Document</title>
 </head>
 <body>
-    <input type="email" name="email" id="email">
-    <input type="password" name="password" id="password">
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email"><br>
+    <label for="password">Password</label>
+    <input type="password" name="password" id="password"><br>
+    <label for="first-name">First name</label>
+    <input type="text" name="first-name" id="first-name"><br>
+    <label for="last-name">Last name</label>
+    <input type="text" name="last-name" id="last-name"><br>
+    <label for="profile-image">Profile image</label>
+    <input type="file" name="profile-image" id="profile-image"><br>
     <input type="submit" id="submit">
 </body>
 
 <script>
     let CLIENT_ID = ''
     let CLIENT_SECRET = ''
-    let AUTH0_DOMAIN = ''
+    let AUTH0_DOMAIN =  ''
+    let type = 'visitor'
     
     // post request on https://{AUTH0_DOMAIN}/dbconnections/signup
     // with auth0_data as data
@@ -40,7 +49,33 @@
         body: JSON.stringify(auth0_data)
     })
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => {
+        console.log(data);
+        let auth0_id = data._id;
+        let first_name = document.getElementById("first-name").value;
+        let last_name = document.getElementById("last-name").value;
+        let profile_image = document.getElementById("profile-image").files[0];
+
+        let formData = new FormData();
+        formData.append('auth0_id', auth0_id);
+        formData.append('email', data.email);
+        formData.append('first_name', first_name);
+        formData.append('last_name', last_name);
+        formData.append('profile_pic', profile_image);
+        formData.append('acc_type', type);
+
+        console.log(formData)
+        for (const [key, value] of formData.entries()) {
+            console.log(key, value);
+            }
+        // console.log(user_data);
+        fetch(`http://localhost:8000/api/accounts/register/`, {
+        method: 'POST',
+        body: formData
+
+    })});
+
+
     }
 </script>
 </html>
