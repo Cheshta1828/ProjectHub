@@ -4,6 +4,7 @@ type_choices = (
     ('admin', 'Admin'),
     ('collegespoc', 'CollegeSpoc'), 
     ('college_coordinator', 'College_Coordinator'),
+    ('visitor', 'Visitor'),
 )
 class Course(models.Model):
     name = models.CharField(max_length=255)
@@ -34,11 +35,15 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 # register -base user +auth0 db store 
 # login-auth0
-class BaseUser(AbstractBaseUser, PermissionsMixin):
+class BaseUser(AbstractBaseUser, PermissionsMixin): #base user for all users and also the visitor
+    auth0_id = models.CharField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    type = models.CharField(max_length=20, choices=type_choices)
+    acc_type = models.CharField(max_length=20, choices=type_choices)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    profile_pic = models.ImageField(upload_to='profile_pics/',blank=True)
 
     # Add any additional fields you need
 
@@ -49,6 +54,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def get_by_natural_key(self):
         return self.email
 
+    def __str__(self):
+        return self.email
 
     
 
@@ -60,7 +67,6 @@ class CollegeSpoc(BaseUser): #college spoc while registering their college
     univ_address = models.TextField()
     spoc_mail = models.EmailField()
     contact = models.CharField(max_length=20)
-    profile_pic = models.ImageField(upload_to='profile_pics/',blank=True)
     aishe_code = models.CharField(max_length=20)
     abbrevation = models.CharField(max_length=10,null=True,blank=True)
     letter_of_approval = models.FileField(upload_to='letters_of_approval/')
@@ -98,11 +104,5 @@ class Coordinator_Course(models.Model):
         return self.coordinator.name + ' - ' + self.course.name
 
 
-    
 
-class Visitor(BaseUser):
-    name = models.CharField(max_length=255)
-    profile_pic = models.ImageField(upload_to='profile_pics/')
-    def __str__(self):
-        return self.name
    

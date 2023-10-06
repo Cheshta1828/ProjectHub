@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import CollegeSpoc, Course, CourseCoordinator,Visitor
+from accounts.models import CollegeSpoc, Course, CourseCoordinator, BaseUser
 import requests
 import uuid
 
@@ -61,20 +61,20 @@ class ProjectEntry(models.Model):
         super(ProjectEntry, self).save(*args, **kwargs)
 
 class upvote(models.Model):
-    upvoted_by=models.ForeignKey(Visitor,on_delete=models.CASCADE)
+    upvoted_by=models.ForeignKey(BaseUser,on_delete=models.CASCADE)
     upvoted_to=models.ForeignKey(ProjectEntry,on_delete=models.CASCADE)
 
 class comment(models.Model):
-    commented_by=models.ForeignKey(Visitor,on_delete=models.CASCADE)
+    commented_by=models.ForeignKey(BaseUser,on_delete=models.CASCADE)
     commented_on=models.ForeignKey(ProjectEntry,on_delete=models.CASCADE)
     no_of_upvotes=models.IntegerField(default=0)
     
 class comment_like(models.Model):
-    liked_by=models.ForeignKey(Visitor,on_delete=models.CASCADE)
+    liked_by=models.ForeignKey(BaseUser,on_delete=models.CASCADE)
     liked_on=models.ForeignKey(comment,on_delete=models.CASCADE)
 
 class comment_reply(models.Model):
-    replied_by=models.ForeignKey(Visitor,on_delete=models.CASCADE)
+    replied_by=models.ForeignKey(BaseUser,on_delete=models.CASCADE)
     replied_on=models.ForeignKey(comment,on_delete=models.CASCADE)
 
 
